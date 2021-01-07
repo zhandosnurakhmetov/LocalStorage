@@ -9,7 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
 
-
     @IBOutlet weak var tableView: UITableView!
     private let localStorage = CoreDataStorage()
     private var items: [Todo] = []
@@ -17,32 +16,29 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "Identifier")
-//        items = localStorage.fetchTodoItems()
+        items = localStorage.fetchTodoItems()
     }
 
     @IBAction func addButtonDidPress(_ sender: UIBarButtonItem) {
-        var count = UserDefaults.standard.integer(forKey: "yahoo")
-        count += 1
-        UserDefaults.standard.setValue(count, forKey: "yahoo")
-//        let alert = UIAlertController(title: "Что хотите добавить?", message: nil, preferredStyle: .alert)
-//        alert.addTextField { textField in
-//            textField.placeholder = "Title"
-//        }
-//        alert.addTextField { textField in
-//            textField.placeholder = "Subtitle"
-//        }
-//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
-//
-//        let addAction = UIAlertAction(title: "Add", style: .default) { [weak self] action in
-//            let title = alert.textFields?[0].text ?? ""
-//            let subtitle = alert.textFields?[1].text ?? ""
-//            self?.localStorage.save(title: title, subtitle: subtitle)
-//            self?.reloadTableView()
-//        }
-//
-//        alert.addAction(addAction)
-//        alert.addAction(cancelAction)
-//        present(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Что хотите добавить?", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Title"
+        }
+        alert.addTextField { textField in
+            textField.placeholder = "Subtitle"
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
+
+        let addAction = UIAlertAction(title: "Add", style: .default) { [weak self] action in
+            let title = alert.textFields?[0].text ?? ""
+            let subtitle = alert.textFields?[1].text ?? ""
+            self?.localStorage.save(title: title, subtitle: subtitle)
+            self?.reloadTableView()
+        }
+
+        alert.addAction(addAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
 
     private func showEditAlert(item: Todo) {
@@ -81,8 +77,8 @@ extension ViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Identifier", for: indexPath) as! TodoListCell
-//        cell.titleLabel.text = items[indexPath.row].title
-//        cell.subtitleLabel.text = items[indexPath.row].subtitle
+        cell.titleLabel.text = items[indexPath.row].title
+        cell.subtitleLabel.text = items[indexPath.row].subtitle
         return cell
     }
 }
@@ -100,9 +96,5 @@ extension ViewController: UITableViewDelegate {
             self.showEditAlert(item: item)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(UserDefaults.standard.integer(forKey: "yahoo"))
     }
 }
